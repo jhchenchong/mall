@@ -123,8 +123,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     public ServiceResponse<String> resetPassword(String passwordOld, String passwordNew, User user) {
-        int reslutCount = userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId());
-        if (reslutCount == 0) {
+        int resultCount = userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId());
+        if (resultCount == 0) {
             return ServiceResponse.createByErrorMessage("旧密码错误");
         }
         user.setPassword(MD5Util.MD5EncodeUtf8(passwordNew));
@@ -162,5 +162,13 @@ public class UserServiceImpl implements IUserService {
             return ServiceResponse.createBySuccess(user);
         }
         return ServiceResponse.createByErrorMessage("找不到当前用户");
+    }
+
+    // backend
+    public ServiceResponse checkAdminRole(User user) {
+        if (user != null && user.getRole().intValue() == Const.Role.ROLE_ADMIN) {
+            return ServiceResponse.createBySuccess();
+        }
+        return ServiceResponse.createByError();
     }
 }
